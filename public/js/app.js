@@ -1,17 +1,14 @@
 const socket = io();
-let index = 0;
 
 const render = function(outputElement, dataList) {
   dataList.forEach(e => {
     $(outputElement).append(`
             <div id='item-${e.task}' class="toDoItem">
-            <input class="finishedBtn" type="checkbox">
-            <span>${e.task}</span>
+            <span class='todo'>${e.task}</span>
             <a href="#"><span id='deleteBtn-${
               e.task
             }' class="finish far fa-circle fa-lg" value='${e.task}'></span></a>
             </div>`);
-    index++;
   });
 };
 
@@ -46,18 +43,15 @@ $(document).ready(function() {
   $(document).on("click", ".finish", function(event) {
     event.preventDefault();
     const deleteId = $(this).attr("value");
-    console.log(deleteId);
-    $(this).toggleClass('fa-circle').toggleClass('fa-times-circle');
     $(`#item-${deleteId}`).toggleClass('opacity');
+    $(this).toggleClass('fa-circle').toggleClass('fa-times-circle').toggleClass('finish').toggleClass('delete');
   });
 });
 
 $(document).ready(function() {
   $(document).on("click", ".delete", function(event) {
-    // event.preventDefault();
     //extract number from value property of clicked button
     const deleteId = $(this).attr("value");
-    $(`#item-${deleteId}`).remove();
     $.ajax({ url: `/api/todolist/${deleteId}`, method: "DELETE" });
     $("#content").html("");
     $.ajax({ url: "/api/todolist", method: "GET" }).then(function(data) {

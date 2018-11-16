@@ -9,7 +9,7 @@ const render = function(outputElement, dataList) {
             <span>${e.task}</span>
             <a href="#"><span id='deleteBtn-${
               e.task
-            }' class="finish far fa-circle" value='${e.task}'></span></a>
+            }' class="finish far fa-circle fa-lg" value='${e.task}'></span></a>
             </div>`);
     index++;
   });
@@ -45,21 +45,16 @@ $("#submit-form").on("submit", function(event) {
 $(document).ready(function() {
   $(document).on("click", ".finish", function(event) {
     event.preventDefault();
-    //extract number from value property of clicked button
     const deleteId = $(this).attr("value");
-    $(`#item-${deleteId}`).toggleClass('fa-circle');
-    $(`#item-${deleteId}`).toggleClass('fa-times-circle');
-    $.ajax({ url: `/api/todolist/${deleteId}`, method: "DELETE" });
-    $("#content").html("");
-    $.ajax({ url: "/api/todolist", method: "GET" }).then(function(data) {
-      render("#content", data);
-    });
+    console.log(deleteId);
+    $(this).toggleClass('fa-circle').toggleClass('fa-times-circle');
+    $(`#item-${deleteId}`).toggleClass('opacity');
   });
 });
 
 $(document).ready(function() {
   $(document).on("click", ".delete", function(event) {
-    event.preventDefault();
+    // event.preventDefault();
     //extract number from value property of clicked button
     const deleteId = $(this).attr("value");
     $(`#item-${deleteId}`).remove();

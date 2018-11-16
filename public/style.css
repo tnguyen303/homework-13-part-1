@@ -58,16 +58,19 @@ main{
 .fa-circle{
     position: absolute;
     right: 10px;
+    /* line-height: 20px; */
+    color: gray;
 }
 
-a:hover{
-    color: #6d6e70;
+.fa-times-circle{
+    position: absolute;
+    right: 10px;
+    color: aqua;
 }
 
 .toDoItem{
     grid-column: span 2;
     grid-row: span 1;
-    /* background-color: #eaecef; */
     border-radius: 3px;
     margin-top: 15px;
     padding: 3px;
@@ -76,6 +79,7 @@ a:hover{
     font-weight: bolder;
     position: relative;
 }
-.fa-times{
-    line-height: 20px
+
+.opacity{
+    opacity: 0.5;
 }

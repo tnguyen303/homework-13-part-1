@@ -12,13 +12,23 @@ $("#moment-year").append(year);
 /////////-----UTILITY FUNCTIONS-----/////////////
 const render = function(outputElement, dataList) {
   dataList.forEach(e => {
-    $(outputElement).append(`
+    if (!e.done) {
+      $(outputElement).append(`
             <div id='item-${e.task}' class="toDoItem">
             <span class='todo'>${e.task}</span>
             <a href="#"><span id='deleteBtn-${
               e.task
             }' class="finish far fa-circle fa-lg" value='${e.task}'></span></a>
             </div>`);
+    } else {
+      $(outputElement).append(`
+            <div id='item-${e.task}' class="toDoItem opacity">
+            <span class='todo'>${e.task}</span>
+            <a href="#"><span id='deleteBtn-${
+              e.task
+            }' class="delete far fa-times-circle fa-lg" value='${e.task}'></span></a>
+            </div>`);
+    }
   });
 };
 
@@ -42,7 +52,6 @@ $("#submit-form").on("submit", function(event) {
     done: false
   };
   const newInputList = [newInput];
-  console.log(newInput);
   $.ajax({ url: "/api/todolist", method: "POST", data: newInput }).then(
     function(data) {
       if (data.success === true) {
@@ -60,7 +69,7 @@ $(document).ready(function() {
   $(document).on("click", ".finish", function(event) {
     event.preventDefault();
     const deleteTodo = $(this).attr("value");
-    $.ajax({ url: `/api/todolist/${deleteTodo}`, method: "PUT"});
+    $.ajax({ url: `/api/todolist/${deleteTodo}`, method: "PUT" });
     socket.emit("finish-todo", deleteTodo);
   });
 });
@@ -87,11 +96,6 @@ socket.on("emit-finish", function(data) {
     .toggleClass("fa-times-circle")
     .toggleClass("finish")
     .toggleClass("delete");
-});
-
-socket.on("emit-edit", function(data) {
-  const dataList = [data];
-  render("#content", dataList);
 });
 
 socket.on("emit-delete", function(data) {

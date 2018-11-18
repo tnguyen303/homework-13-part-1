@@ -6,7 +6,6 @@ module.exports = function(io) {
 
     // push to all sockets
     socket.on("add-todo", function(data) {
-      console.log(data);
       //send to all users
       io.emit("emit-add", data);
     });

@@ -1,4 +1,3 @@
-const mongoose = require("mongoose");
 const db = require("../models/Todolist");
 
 module.exports = function(app) {
@@ -23,13 +22,17 @@ module.exports = function(app) {
       });
   });
 
-  app.put('/api/todolist/:taskQuery', function(req,res){
-    db.findOneAndUpdate({task: req.params.taskQuery}, {$set: {done: true}}).then(function(result){
-      console.log(result);
-    })
-    .catch(function(err){
-      console.log(err);
-    })
+  app.put("/api/todolist/:taskQuery", function(req, res) {
+    db.findOneAndUpdate(
+      { task: req.params.taskQuery },
+      { $set: { done: true } }
+    )
+      .then(function(data) {
+        res.json(data);
+      })
+      .catch(function(err) {
+        res.json(err);
+      });
   });
 
   app.delete("/api/todolist/:taskQuery", function(req, res) {

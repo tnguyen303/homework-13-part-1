@@ -1,5 +1,14 @@
 const socket = io();
 
+//use moment.js to get current day, date, year, time
+const dayDateYearTime = moment().format('llll');
+const day = dayDateYearTime.slice(0,3).toUpperCase();
+const date = dayDateYearTime.slice(5,11).toUpperCase();
+const year = dayDateYearTime.slice(13,17);
+$('#moment-day').append(day);
+$('#moment-date').append(date);
+$('#moment-year').append(year);
+
 const render = function(outputElement, dataList) {
   dataList.forEach(e => {
     $(outputElement).append(`
@@ -75,7 +84,3 @@ socket.on("emit-edit", function(data) {
 });
 
 getTodoList();
-
-const datetime = moment().format('ll');
-// $('#moment-day').append()
-console.log(datetime);

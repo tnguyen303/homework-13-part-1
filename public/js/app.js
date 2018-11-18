@@ -29,14 +29,13 @@ $("#submit-form").on("submit", function(event) {
       if (data.success === true) {
         render("#content", newInputList);
         $("#newInput").val("");
-        index++;
       } else {
         alert("Enter a unique input");
       }
     }
   );
   //send to all sockets
-  socket.emit("add-todo", newInput);
+  socket.emit("add-todo", newInputList);
 });
 
 $(document).ready(function() {
@@ -67,8 +66,7 @@ const getTodoList = function(){
 };
 
 socket.on("emit-add", function(data) {
-  const dataList = [data];
-  render("#content", dataList);
+  render("#content", data);
 });
 
 socket.on("emit-edit", function(data) {
@@ -77,3 +75,7 @@ socket.on("emit-edit", function(data) {
 });
 
 getTodoList();
+
+const datetime = moment().format('ll');
+// $('#moment-day').append()
+console.log(datetime);

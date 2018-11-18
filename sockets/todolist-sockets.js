@@ -8,19 +8,15 @@ module.exports = function(io) {
     socket.on("add-todo", function(data) {
       console.log(data);
       //send to all users
-      io.emit('emit-add',data);
+      io.emit("emit-add", data);
     });
 
     socket.on("finish-todo", function(data) {
-      //send to all users
-      io.emit('emit-finish',data);
+      io.emit("emit-finish", data);
     });
 
     socket.on("delete-todo", function(data) {
-      //send to all users
-      io.emit('emit-delete',data);
+      io.emit("emit-delete", data);
     });
   });
-
-  
 };

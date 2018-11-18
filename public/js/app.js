@@ -60,9 +60,10 @@ $("#submit-form").on("submit", function(event) {
 $(document).ready(function() {
   $(document).on("click", ".finish", function(event) {
     event.preventDefault();
-    const deleteId = $(this).attr("value");
-    $(`#item-${deleteId}`).toggleClass('opacity');
+    const deleteTodo = $(this).attr("value");
+    // $(`#item-${deleteTodo}`).toggleClass('opacity');
     $(this).toggleClass('fa-circle').toggleClass('fa-times-circle').toggleClass('finish').toggleClass('delete');
+    socket.emit('finish-todo', deleteTodo);
   });
 });
 
@@ -79,6 +80,10 @@ $(document).ready(function() {
 /////////-----SOCKET.IO LISTENERS-----/////////////
 socket.on("emit-add", function(data) {
   render("#content", data);
+});
+
+socket.on("emit-finish", function(data) {
+  $(`#item-${data}`).toggleClass('opacity');
 });
 
 socket.on("emit-edit", function(data) {

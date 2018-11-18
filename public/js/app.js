@@ -9,6 +9,8 @@ $('#moment-day').append(day);
 $('#moment-date').append(date);
 $('#moment-year').append(year);
 
+
+/////////-----UTILITY FUNCTIONS-----/////////////
 const render = function(outputElement, dataList) {
   dataList.forEach(e => {
     $(outputElement).append(`
@@ -21,6 +23,16 @@ const render = function(outputElement, dataList) {
   });
 };
 
+const getTodoList = function(){
+  $.ajax({ url: "/api/todolist", method: "GET" }).then(function(data) {
+    render("#content", data);
+  });
+};
+/////////-----END UTILITY FUNCTIONS-----/////////////
+
+getTodoList();
+
+/////////-----EVENT LISTENERS-----/////////////
 $("#submit-form").on("submit", function(event) {
   event.preventDefault();
   //display in front-end make an array of 1 element
@@ -32,11 +44,9 @@ $("#submit-form").on("submit", function(event) {
   };
   const newInputList = [newInput];
   console.log(newInput);
-  //post data to server
   $.ajax({ url: "/api/todolist", method: "POST", data: newInput }).then(
     function(data) {
       if (data.success === true) {
-        render("#content", newInputList);
         $("#newInput").val("");
       } else {
         alert("Enter a unique input");
@@ -58,22 +68,15 @@ $(document).ready(function() {
 
 $(document).ready(function() {
   $(document).on("click", ".delete", function(event) {
-    //extract number from value property of clicked button
-    const deleteId = $(this).attr("value");
-    $.ajax({ url: `/api/todolist/${deleteId}`, method: "DELETE" });
-    $("#content").html("");
-    $.ajax({ url: "/api/todolist", method: "GET" }).then(function(data) {
-      render("#content", data);
-    });
+    //extract from value property of clicked button
+    const deleteTodo = $(this).attr("value");
+    $.ajax({ url: `/api/todolist/${deleteTodo}`, method: "DELETE" });
+    socket.emit('delete-todo', deleteTodo)
   });
 });
+/////////-----END EVENT LISTENERS-----/////////////
 
-const getTodoList = function(){
-  $.ajax({ url: "/api/todolist", method: "GET" }).then(function(data) {
-    render("#content", data);
-  });
-};
-
+/////////-----SOCKET.IO LISTENERS-----/////////////
 socket.on("emit-add", function(data) {
   render("#content", data);
 });
@@ -83,4 +86,7 @@ socket.on("emit-edit", function(data) {
   render("#content", dataList);
 });
 
-getTodoList();
+socket.on("emit-delete", function(data) {
+  $(`#item-${data}`).remove();
+});
+/////////-----END SOCKET.IO LISTENERS-----/////////////

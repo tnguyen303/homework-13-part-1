@@ -1,14 +1,13 @@
 const socket = io();
 
 //use moment.js to get current day, date, year, time
-const dayDateYearTime = moment().format('llll');
-const day = dayDateYearTime.slice(0,3).toUpperCase();
-const date = dayDateYearTime.slice(5,11).toUpperCase();
-const year = dayDateYearTime.slice(13,17);
-$('#moment-day').append(day);
-$('#moment-date').append(date);
-$('#moment-year').append(year);
-
+const dayDateYearTime = moment().format("llll");
+const day = dayDateYearTime.slice(0, 3).toUpperCase();
+const date = dayDateYearTime.slice(5, 11).toUpperCase();
+const year = dayDateYearTime.slice(13, 17);
+$("#moment-day").append(day);
+$("#moment-date").append(date);
+$("#moment-year").append(year);
 
 /////////-----UTILITY FUNCTIONS-----/////////////
 const render = function(outputElement, dataList) {
@@ -23,7 +22,7 @@ const render = function(outputElement, dataList) {
   });
 };
 
-const getTodoList = function(){
+const getTodoList = function() {
   $.ajax({ url: "/api/todolist", method: "GET" }).then(function(data) {
     render("#content", data);
   });
@@ -61,9 +60,8 @@ $(document).ready(function() {
   $(document).on("click", ".finish", function(event) {
     event.preventDefault();
     const deleteTodo = $(this).attr("value");
-    // $(`#item-${deleteTodo}`).toggleClass('opacity');
-    $(this).toggleClass('fa-circle').toggleClass('fa-times-circle').toggleClass('finish').toggleClass('delete');
-    socket.emit('finish-todo', deleteTodo);
+    $.ajax({ url: `/api/todolist/${deleteTodo}`, method: "PUT"});
+    socket.emit("finish-todo", deleteTodo);
   });
 });
 
@@ -72,7 +70,7 @@ $(document).ready(function() {
     //extract from value property of clicked button
     const deleteTodo = $(this).attr("value");
     $.ajax({ url: `/api/todolist/${deleteTodo}`, method: "DELETE" });
-    socket.emit('delete-todo', deleteTodo)
+    socket.emit("delete-todo", deleteTodo);
   });
 });
 /////////-----END EVENT LISTENERS-----/////////////
@@ -83,7 +81,12 @@ socket.on("emit-add", function(data) {
 });
 
 socket.on("emit-finish", function(data) {
-  $(`#item-${data}`).toggleClass('opacity');
+  $(`#item-${data}`).toggleClass("opacity");
+  $(`#deleteBtn-${data}`)
+    .toggleClass("fa-circle")
+    .toggleClass("fa-times-circle")
+    .toggleClass("finish")
+    .toggleClass("delete");
 });
 
 socket.on("emit-edit", function(data) {

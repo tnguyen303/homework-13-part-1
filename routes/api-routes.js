@@ -23,6 +23,15 @@ module.exports = function(app) {
       });
   });
 
+  app.put('/api/todolist/:taskQuery', function(req,res){
+    db.findOneAndUpdate({task: req.params.taskQuery}, {$set: {done: true}}).then(function(result){
+      console.log(result);
+    })
+    .catch(function(err){
+      console.log(err);
+    })
+  });
+
   app.delete("/api/todolist/:taskQuery", function(req, res) {
     db.remove({ task: req.params.taskQuery })
       .then(function() {
